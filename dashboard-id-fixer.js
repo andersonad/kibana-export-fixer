@@ -41,6 +41,7 @@ const dashJsonContent = JSON.parse(dashContent)[0];
 const newPanelIds = dashJsonContent._source.panelsJSON.mapReplace(repMap);
 const newDashContent = dashJsonContent;
 newDashContent._source.panelsJSON = newPanelIds;
+newDashContent._id = ["dashboard:",path.basename(inputFilePath).split('.json')[0]].join('')
 newDashContent._index = ".kibana_{{ FireDepartment.firecares_id }}"
 newDashContent._type = "doc"
 const oldSource = newDashContent._source;
