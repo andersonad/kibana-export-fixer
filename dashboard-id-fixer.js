@@ -27,7 +27,7 @@ const filePaths = fileList.map(i => defExportVis+i)
 const repMap = {};
 filePaths.forEach(function (element) {
   const content = fs.readFileSync(element);
-  const visName = ["visualization:",path.basename(element).split('.json')[0]].join('');
+  const visName = [path.basename(element).split('.json')[0]].join('');
   const cont = JSON.parse(content);
   const jsonContent = cont[0];
   const id = jsonContent._id;
