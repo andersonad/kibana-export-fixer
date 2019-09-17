@@ -1,1 +1,1 @@
-Note: remember to also replace any instances of a fire department's individual index references *within* the visualization itself with {{  }} index references using, e.g. sed.
+Note: remember to fix all of the map fixtures so that they properly reflect the correct starting location of a given subscriber city.
