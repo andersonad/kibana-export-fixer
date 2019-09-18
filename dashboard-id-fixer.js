@@ -5,10 +5,12 @@
 //input json
 const fs = require("fs");
 const path = require("path");
+const _ = require("lodash");
 
 const outputDirectoryPath = process.argv[2];
 const defExportVis = process.argv[3];
 const inputFilePath = process.argv[4];
+console.dir(outputDirectoryPath);
 //console.dir(JSON.parse(contents));
 
 String.prototype.mapReplace = function(map) {
@@ -42,11 +44,14 @@ const newPanelIds = dashJsonContent._source.panelsJSON.mapReplace(repMap);
 const newDashContent = dashJsonContent;
 newDashContent._source.panelsJSON = newPanelIds;
 newDashContent._id = ["dashboard:",path.basename(inputFilePath).split('.json')[0]].join('')
-newDashContent._index = ".kibana_{{ FireDepartment.firecares_id }}"
+newDashContent._index = "{{ kibana.tenancy }}"
 newDashContent._type = "doc"
 const oldSource = newDashContent._source;
 newDashContent._source = {};
 newDashContent._source.type = "dashboard";
 newDashContent._source.dashboard = oldSource;
+const regex = /\"index\":\".*?\"/g;
+newDashContent._source.dashboard.kibanaSavedObjectMeta.searchSourceJSON = _.replace(newDashContent._source.dashboard.kibanaSavedObjectMeta.searchSourceJSON,regex,'\"index\": \"{{ fire_department.es_indices.fire-incident }}\"')
 //todo: fix variable names in final call
-fs.writeFileSync([outputDirectoryPath,path.basename(inputFilePath).split('.json')[0],"_fixed.json"].join(''), JSON.stringify(newDashContent,null,2))
+console.dir(path.normalize(["File written to",[outputDirectoryPath,'/',path.basename(inputFilePath).split('.json')[0],"_fixed.json"].join('')].join(' ')))
+fs.writeFileSync(path.normalize([outputDirectoryPath,'/',path.basename(inputFilePath).split('.json')[0],"_fixed.json"].join('')), JSON.stringify(newDashContent,null,2))
